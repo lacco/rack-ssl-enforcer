@@ -50,6 +50,12 @@ class TestRackSslEnforcer < Test::Unit::TestCase
       get 'http://www.example.org/'
       assert !last_response.headers["Strict-Transport-Security"]
     end
+
+    should "remember the signed_request parameter" do
+      post 'http://www.example.org/admin?token=33', "signed_request=abc"
+      assert_equal 301, last_response.status
+      assert_equal 'https://www.example.org/admin?signed_request=abc&token=33', last_response.location
+    end
   end
 
   context 'With Rails 2.3 / Rack 1.1-style Array-based cookies' do

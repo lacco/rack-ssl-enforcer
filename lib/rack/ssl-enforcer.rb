@@ -62,7 +62,10 @@ module Rack
     end
     
     def modify_location_and_redirect
-      location = "#{current_scheme}://#{@request.host}#{@request.fullpath}"
+      location = "#{current_scheme}://#{@request.host}#{@request.path}"
+      if @request.params.size > 0
+        location += "?" + @request.params.map{|(k,v)| "#{k}=#{v}"}.sort.join("&")
+      end
       location = replace_scheme(location, @scheme)
       location = replace_host(location, @options[:redirect_to])
       redirect_to(location)
