@@ -63,6 +63,9 @@ module Rack
     
     def modify_location_and_redirect
       location = "#{current_scheme}://#{@request.host}#{@request.path}"
+      if defined?(Rails)
+        Rails.logger.error(@request.params.inspect)
+      end
       if @request.params.size > 0
         location += "?" + @request.params.map{|(k,v)| "#{k}=#{v}"}.sort.join("&")
       end
